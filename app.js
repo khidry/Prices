@@ -1,10 +1,10 @@
-var APP_VERSION="1.1.1";
+var APP_VERSION="1.2.0";
 var $=function(i){return document.getElementById(i)},C=window.CFG||{};
 var BR={apple:["آبل","🍎"],samsung:["سامسونج"],honor:["هونر"],xiaomi:["شاومي"],oppo:["أوبو"],vivo:["فيفو","V"],realme:["ريلمي"],tecno:["تكنو"],infinix:["إنفينكس"],nokia:["نوكيا"],itel:["آي تل","i"],zte:["ZTE","Z"],lenovo:["لينوفو"],other:["أخرى","📱"]};
-var LB={samsung:1,honor:1,xiaomi:1,oppo:1,realme:1,tecno:1,infinix:1,nokia:1,lenovo:1};
+var LB={apple:"png",samsung:"png",honor:"png",xiaomi:"png",infinix:"png",vivo:"png",tecno:"png",nokia:"png",itel:"png",oppo:"svg",realme:"svg",lenovo:"svg",zte:"svg"};
 var SP=[["screen","الشاشة"],["cpu","المعالج"],["cam","الكاميرا الخلفية"],["selfie","الكاميرا الأمامية"],["battery","البطارية"],["os","النظام"],["extra","إضافي"]];
 var HEAD=["code","type","group","name","price","keywords","desc"].concat(SP.map(function(s){return s[0]}),["approx","tag","colors","img"]);
-var ITEMS=[],IDX={},VER="",FV=[],ST={th:"auto",name:"",pin:"",adm:0},V={v:"home",pt:"p",b:"*",q:"",max:"",sort:"pa",g:"",k:""};
+var ITEMS=[],IDX={},VER="",FV=[],ST={th:"auto",name:"",pin:"",adm:0},V={v:"home",pt:"p",b:"*",q:"",max:"",sort:"pd",g:"",k:""};
 try{FV=JSON.parse(localStorage.getItem("pp_fv")||"[]");ST=Object.assign(ST,JSON.parse(localStorage.getItem("pp_st")||"{}"))}catch(e){}
 function sv(){try{localStorage.setItem("pp_fv",JSON.stringify(FV));localStorage.setItem("pp_st",JSON.stringify(ST))}catch(e){}}
 function E(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
@@ -12,7 +12,7 @@ function nz(s){return String(s||"").toLowerCase().replace(/[\u064B-\u0652\u0640]
 function theme(){var t=ST.th=="auto"?(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"):ST.th;document.documentElement.setAttribute("data-t",t)}
 function pr(n){return n?Number(n).toLocaleString("en")+' <small>ر.س</small>':'<small>اسأل</small>'}
 function bn(k){return BR[k]?BR[k][0]:k}
-function lg(k){return LB[k]?'<img src="'+C.logoDir+k+'.svg" alt="">':'<span>'+(BR[k]&&BR[k][1]||bn(k))+'</span>'}
+function lg(k){return LB[k]?'<img src="'+C.logoDir+k+'.'+LB[k]+'" alt="">':'<span>'+(BR[k]&&BR[k][1]||bn(k))+'</span>'}
 /* ===== البيانات ===== */
 function setData(rows,ver){ITEMS=rows.filter(function(r){return r.code!==""&&r.name}).map(function(r){r.code=String(r.code);r.price=+r.price||0;r.keywords=String(r.keywords||"");return r});IDX={};ITEMS.forEach(function(r){IDX[r.code]=r});VER=ver||VER;
 try{localStorage.setItem("pp_items",JSON.stringify({v:VER,rows:rows}))}catch(e){}}
@@ -71,7 +71,7 @@ if(r.type!="a"){SP.forEach(function(s){if(r[s[0]])rows+='<div class="sp"><b>'+s[
 if(r.desc)rows+='<div class="sp"><b>الوصف</b><span>'+E(r.desc)+'</span></div>';
 if(r.type=="a"){rows+='<div class="sp"><b>القسم</b><span>'+E(r.group)+'</span></div>';if(r.keywords)rows+='<div class="sp"><b>كلمات دلالية</b><span>'+E(r.keywords)+'</span></div>'}
 var ap=r.type!="a"&&r.approx&&String(r.approx)!="0",f=FV.indexOf(r.code)>-1;
-var h='<div class="md" onclick="if(event.target==this)this.remove()"><div class="bx"><div class="cd" style="font-size:20px">'+E(r.code)+'</div><h3>'+E(r.name)+(r.tag?'<span class="tag">'+E(r.tag)+'</span>':'')+'</h3><div class="pc" style="font-size:20px;margin:4px 0">'+pr(r.price)+'</div><div class="gal" id="gal"></div>'+rows+(ap?'<div class="note">⚠️ بعض المواصفات تقريبية (≈) — راجع الموقع الرسمي للمصنّع قبل الاعتماد عليها.</div>':'')+'<div class="bc">'+bc(r.code)+'<div>'+E(r.code)+'</div></div><div style="margin-top:8px"><button class="btn" onclick="shareI(\''+r.code+'\')">📤 واتساب</button><button class="btn g" onclick="fav(\''+r.code+'\')">'+(f?'★ مفضل':'☆ للمفضلة')+'</button><button class="btn g" onclick="cp(\''+r.code+'\')">📋 نسخ الكود</button>'+(r.type!="a"?'<button class="btn g" onclick="window.open(\'https://www.google.com/search?q=\'+encodeURIComponent(IDX[\''+r.code+'\'].name.replace(/[^\\w\\s\\u0600-\\u06FF]/g,\' \')+\' specs\'))">🌐 مواصفات كاملة</button>':'')+(isAdm()?'<button class="btn g" onclick="edit(\''+r.code+'\')">✏️ تعديل</button><button class="btn r" onclick="del(\''+r.code+'\')">🗑 حذف</button>':'')+'<button class="btn g" onclick="this.closest(\'.md\').remove()">إغلاق</button></div></div></div>';
+var h='<div class="md" onclick="if(event.target==this)this.remove()"><div class="bx"><div class="cd" style="font-size:20px">'+E(r.code)+'</div><h3>'+E(r.name)+(r.tag?'<span class="tag">'+E(r.tag)+'</span>':'')+'</h3>'+(r.type=="a"?'<div class="pc" style="font-size:20px;margin:4px 0">'+pr(r.price)+'</div>':'')+'<div class="gal" id="gal"></div>'+rows+(ap?'<div class="note">⚠️ بعض المواصفات تقريبية (≈) — راجع الموقع الرسمي للمصنّع قبل الاعتماد عليها.</div>':'')+'<div class="bc">'+bc(r.code)+'<div>'+E(r.code)+'</div></div><div style="margin-top:8px"><button class="btn" onclick="shareI(\''+r.code+'\')">📤 واتساب</button><button class="btn g" onclick="fav(\''+r.code+'\')">'+(f?'★ مفضل':'☆ للمفضلة')+'</button><button class="btn g" onclick="cp(\''+r.code+'\')">📋 نسخ الكود</button>'+(r.type!="a"?'<button class="btn g" onclick="window.open(\'https://www.google.com/search?q=\'+encodeURIComponent(IDX[\''+r.code+'\'].name.replace(/[^\\w\\s\\u0600-\\u06FF]/g,\' \')+\' specs\'))">🌐 مواصفات كاملة</button>':'')+(isAdm()?'<button class="btn g" onclick="edit(\''+r.code+'\')">✏️ تعديل</button><button class="btn r" onclick="del(\''+r.code+'\')">🗑 حذف</button>':'')+'<button class="btn g" onclick="this.closest(\'.md\').remove()">إغلاق</button></div></div></div>';
 var d=document.createElement("div");d.innerHTML=h;document.body.appendChild(d.firstChild);if(r.type!="a")gal(r)}
 var GM={};
 function gal(r){var box=$("gal"),bs=[r.code],ex=["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"],d=C.imgDir||"images/";if(r.img&&r.img!=r.code)bs.push(r.img);
@@ -80,9 +80,19 @@ if(f.length||f.d){dr();return}
 function next(i){if(i>8)return;var c=[];bs.forEach(function(b){ex.forEach(function(e){c.push(d+b+"-"+i+"."+e)})});
 (function t(k){if(k>=c.length){if(i==1)f.d=1;return}var m=new Image();m.onload=function(){f[i-1]=m.src;dr();next(i+1)};m.onerror=function(){t(k+1)};m.src=c[k]})(0)}
 next(1)}
-function zoom(s){var d=document.createElement("div");d.className="zm";d.onclick=function(){d.remove()};d.innerHTML='<img src="'+s+'">';document.body.appendChild(d)}
+function zoom(s){var d=document.createElement("div");d.className="zm";d.innerHTML='<img src="'+s+'" draggable="false"><button class="zx">✕</button>';var im=d.firstChild,sc=1,tx=0,ty=0,ps=null,lt=0;
+function ap(){var mx=(sc-1)*im.offsetWidth/2,my=(sc-1)*im.offsetHeight/2;tx=Math.max(-mx,Math.min(mx,tx));ty=Math.max(-my,Math.min(my,ty));im.style.transform="translate("+tx+"px,"+ty+"px) scale("+sc+")"}
+function ds(t){return Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY)}
+function tg(){sc=sc>1?1:2.5;tx=ty=0;ap()}
+d.addEventListener("touchstart",function(e){if(e.touches.length==2)ps={d:ds(e.touches),s:sc};else if(e.touches.length==1){ps={x:e.touches[0].clientX-tx,y:e.touches[0].clientY-ty};var n=Date.now();if(n-lt<300&&e.target==im)tg();lt=n}},{passive:false});
+d.addEventListener("touchmove",function(e){e.preventDefault();if(!ps)return;if(e.touches.length==2&&ps.d){sc=Math.min(6,Math.max(1,ps.s*ds(e.touches)/ps.d));ap()}else if(e.touches.length==1&&ps.x!==undefined&&sc>1){tx=e.touches[0].clientX-ps.x;ty=e.touches[0].clientY-ps.y;ap()}},{passive:false});
+d.addEventListener("touchend",function(e){if(e.touches.length==1)ps={x:e.touches[0].clientX-tx,y:e.touches[0].clientY-ty};else if(!e.touches.length)ps=null});
+d.addEventListener("wheel",function(e){e.preventDefault();sc=Math.min(6,Math.max(1,sc*(e.deltaY<0?1.15:.87)));ap()},{passive:false});
+im.addEventListener("dblclick",tg);
+d.addEventListener("click",function(e){if(e.target==d||e.target.className=="zx")d.remove()});
+document.body.appendChild(d)}
 function cp(c){if(navigator.clipboard)navigator.clipboard.writeText(c).then(function(){toast("تم نسخ الكود")});else toast(c)}
-function shareI(c){var r=IDX[c],t="🔖 كود: "+r.code+"\n📦 "+r.name+"\n💰 "+r.price+" ر.س";if(r.type!="a")SP.forEach(function(s){if(r[s[0]]&&s[0]!="extra"&&s[0]!="os")t+="\n• "+s[1]+": "+r[s[0]]});window.open("https://wa.me/?text="+encodeURIComponent(t+"\n\n"+location.href.split("#")[0].split("?")[0]))}
+function shareI(c){var r=IDX[c],t="🔖 كود: "+r.code+"\n📦 "+r.name+(r.type=="a"?"\n💰 "+r.price+" ر.س":"");if(r.type!="a")SP.forEach(function(s){if(r[s[0]]&&s[0]!="extra"&&s[0]!="os")t+="\n• "+s[1]+": "+r[s[0]]});window.open("https://wa.me/?text="+encodeURIComponent(t+"\n\n"+location.href.split("#")[0].split("?")[0]))}
 function shareApp(){var d={title:"أسعار الجوالات والاكسسوارات",text:"تطبيق أسعار الجوالات والاكسسوارات بالأكواد والمواصفات",url:location.href.split("#")[0].split("?")[0]};if(navigator.share)navigator.share(d).catch(function(){});else window.open("https://wa.me/?text="+encodeURIComponent(d.text+"\n"+d.url))}
 /* ===== الإدارة (تعديل / إضافة / حذف) ===== */
 function post(o){o.pin=ST.pin;o.user=ST.name;return fetch(C.apiUrl,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).then(function(r){return r.json()})}
